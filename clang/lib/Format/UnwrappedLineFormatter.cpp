@@ -393,6 +393,18 @@ private:
       }
     }
 
+
+
+    // Don't format single line function block that fit on a single line after function declaration
+    if (MergeShortFunctions
+        && TheLine->First->is(TT_FunctionLBrace) && TheLine->First == TheLine->Last // The line is a function left brace
+        && I + 2 < E // The range contains at least 3 lines
+        && I[2]->First == I[2]->Last && I[2]->First->Tok.is(tok::r_brace) // Last line contains a single right brace
+        && nextTwoLinesFitInto(I, Limit - (Style.ContinuationIndentWidth))) { // Next two lines fit into limit
+      IndentTracker.nextLine(*I[1]);
+      return 2;
+    }
+
     // Try to merge a function block with left brace unwrapped.
     if (TheLine->Last->is(TT_FunctionLBrace) && TheLine->First != TheLine->Last)
       return MergeShortFunctions ? tryMergeSimpleBlock(I, E, Limit) : 0;

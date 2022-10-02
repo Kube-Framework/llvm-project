@@ -3364,9 +3364,14 @@ bool TokenAnnotator::spaceRequiredBetween(const AnnotatedLine &Line,
     }
     return false;
   }
+
+  // Fix ellipsis alignment based on pointer alignment
+  if (Left.is(tok::ellipsis))
+    return Style.PointerAlignment != FormatStyle::PAS_Right;
   if (Right.is(tok::ellipsis)) {
     return Left.Tok.isLiteral() || (Left.is(tok::identifier) && Left.Previous &&
-                                    Left.Previous->is(tok::kw_case));
+                                    Left.Previous->is(tok::kw_case)) ||
+                                    (Left.is(tok::kw_typename) && Style.PointerAlignment != FormatStyle::PAS_Left);
   }
   if (Left.is(tok::l_square) && Right.is(tok::amp))
     return Style.SpacesInSquareBrackets;
