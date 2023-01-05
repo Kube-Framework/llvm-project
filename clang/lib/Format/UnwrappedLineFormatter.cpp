@@ -298,8 +298,9 @@ private:
 
     auto ShouldMergeShortFunctions = [this, &I, &NextLine, PreviousLine,
                                       TheLine]() {
-      if (Style.AllowShortFunctionsOnASingleLine == FormatStyle::SFS_All)
+      if (Style.AllowShortFunctionsOnASingleLine == FormatStyle::SFS_All) {
         return true;
+      }
       if (Style.AllowShortFunctionsOnASingleLine >= FormatStyle::SFS_Empty &&
           NextLine.First->is(tok::r_brace)) {
         return true;

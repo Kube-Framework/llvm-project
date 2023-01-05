@@ -3304,6 +3304,10 @@ reformat(const FormatStyle &Style, StringRef Code,
   }
 
   Passes.emplace_back([&](const Environment &Env) {
+    return TrailingCommaInserter(Env, Expanded).process();
+  });
+
+  Passes.emplace_back([&](const Environment &Env) {
     return Formatter(Env, Expanded, Status).process();
   });
 
